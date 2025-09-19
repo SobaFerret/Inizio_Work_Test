@@ -1,0 +1,17 @@
+{
+    "organic_results": [
+        {
+            "position": 1,
+            "title": "Example Title 1",
+            "link": "https://example.com/1",
+            "snippet": "Example snippet 1"
+        },
+        {
+            "position": 2,
+            "title": "Example Title 2",
+            "link": "https://example.com/2",
+            "snippet": "Example snippet 2"
+        }
+    ],
+    "ads": [ { "title": "Ad should be ignored" } ]
+}

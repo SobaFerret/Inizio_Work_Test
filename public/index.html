@@ -1,0 +1,95 @@
+﻿<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GoogleJSON by Soba</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+      max-width: 760px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background: #000;   
+      color: #f00;        
+    }
+
+    input, button {
+      font-size: 1rem;
+      padding: .6rem .8rem;
+      background: #111;
+      color: #f00;
+      border: 1px solid #f00;
+    }
+
+    input::placeholder {
+      color: #800;  /* dark red placeholder */
+    }
+
+    .row { display: flex; gap: .5rem; }
+    ul { padding-left: 1rem; }
+    li { margin: .5rem 0; }
+    .muted { color: #f55; font-size: .9rem; }
+    .bar { margin: 1rem 0; border-bottom: 1px solid #f00; }
+
+    a { color: #f55; text-decoration: underline; }
+    a:hover { color: #faa; }
+  </style>
+</head>
+<body>
+  <h1>GoogleJSON by Soba</h1>
+  <p class="muted">God I love comic sans...d</p>
+
+  <div class="row">
+    <input id="q" placeholder="Enter keyword" />
+    <button id="btn">Hledat</button>
+    <button id="dl" disabled>Download JSON</button>
+  </div>
+
+  <div class="bar"></div>
+
+  <pre id="json" class="muted"></pre>
+
+  <h2>Results</h2>
+  <ul id="list"></ul>
+
+  <script>
+    const qEl = document.getElementById('q');
+    const btn = document.getElementById('btn');
+    const dl  = document.getElementById('dl');
+    const list = document.getElementById('list');
+    const pre = document.getElementById('json');
+    let lastData = null;
+
+    async function run() {
+      const q = qEl.value.trim();
+      if (!q) return;
+      list.innerHTML = '';
+      pre.textContent = 'Loading... just sit and wait ok?';
+
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      lastData = data;
+      pre.textContent = JSON.stringify(data, null, 2);
+      dl.disabled = false;
+
+      data.results.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${item.position}.</strong> <a href="${item.link}" target="_blank" rel="noopener">${item.title}</a><br><span class="muted">${item.snippet}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    btn.addEventListener('click', run);
+    qEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') run(); });
+    dl.addEventListener('click', () => {
+      if (!lastData) return;
+      const blob = new Blob([JSON.stringify(lastData, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `google-organic-${Date.now()}.json`;
+      a.click();
+    });
+  </script>
+</body>
+</html>
