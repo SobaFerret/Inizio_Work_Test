@@ -16,7 +16,7 @@ app.get("/api/search", async (req, res) => {
         res.json(data);
     } catch (err) {
         const status = err.name === "ZodError" ? 400 : 500;
-        res.status(status).json({ error: err.message ?? "Internal error" });
+        res.status(status).json({ error: err.message ?? "Okay, I broke it." });
     }
 });
 

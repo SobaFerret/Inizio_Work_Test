@@ -8,10 +8,10 @@ export async function searchGoogleOrganic({ q, gl = "cz", hl = "cs", num = 10 })
         gl,
         hl,
         num,
-        api_key: process.env.SERPAPI_KEY   // <= put key here
+        api_key: process.env.SERPAPI_KEY   //Key goes here dummy don't forget to get a new one...
     };
 
-    const raw = await getJson(params);    // <= no second arg
+    const raw = await getJson(params);    
     const organic = Array.isArray(raw.organic_results) ? raw.organic_results : [];
 
     const normalized = {
